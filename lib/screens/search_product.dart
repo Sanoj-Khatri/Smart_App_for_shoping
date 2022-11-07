@@ -108,28 +108,30 @@ class _SearchProductState extends State<SearchProduct> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 25,
               ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 1.1,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 84, 84, 227),
-                        Color.fromARGB(255, 220, 220, 220)
-                      ],
-                      stops: [0, 2],
-                      begin: AlignmentDirectional(0, -1),
-                      end: AlignmentDirectional(0, 1),
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: emptylistItem.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
+              SizedBox(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: emptylistItem.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.only(
+                        bottom: 20,
+                      ),
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 84, 84, 227),
+                            Color.fromARGB(255, 220, 220, 220)
+                          ],
+                          stops: [0, 2],
+                          begin: AlignmentDirectional(0, -1),
+                          end: AlignmentDirectional(0, 1),
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        shape: BoxShape.rectangle,
+                      ),
+                      child: ListTile(
                         title: Text(
                           emptylistCompany[index].toString(),
                           style: TextStyle(fontSize: 20, color: Colors.white),
@@ -137,9 +139,9 @@ class _SearchProductState extends State<SearchProduct> {
                         subtitle: Text(
                           emptylistItem[index].toString(),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
