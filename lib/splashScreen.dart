@@ -6,6 +6,8 @@ import 'package:smartapp_fyp/screens/category.dart';
 class SplashScreen extends StatefulWidget {
   static String routeName = "/splash";
 
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -29,13 +31,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Timer(const Duration(seconds: 5), () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const CategoryScreen(title: 'title')));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const CategoryScreen()));
     });
   }
 
@@ -51,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen>
                 RotationTransition(
                   turns: _animation,
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Image.asset(
                       'assests/images/logo.png',
                       height: MediaQuery.of(context).size.height / 2,

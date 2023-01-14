@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:smartapp_fyp/screens/registration/loginpage.dart';
 import 'package:smartapp_fyp/screens/request_for_product.dart';
-import 'package:smartapp_fyp/screens/search.dart';
-import 'package:smartapp_fyp/screens/search_product.dart';
 import 'package:smartapp_fyp/screens/wish_list.dart';
 
 import '../firestore database/fetech_data_firestore.dart';
 
 class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({Key? key, required String title}) : super(key: key);
+  const CategoryScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
@@ -20,6 +20,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           "Select Category",
         ),
@@ -36,7 +37,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => WishList()));
+                    MaterialPageRoute(builder: (context) => const WishList()));
                 //builder: (context) => UserInformation()));
               },
               icon: const Icon(EvaIcons.refresh),

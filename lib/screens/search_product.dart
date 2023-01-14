@@ -1,8 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-
-import '../firestore database/fetech_data_firestore.dart';
 
 class SearchProduct extends StatefulWidget {
   const SearchProduct({Key? key}) : super(key: key);
@@ -138,7 +135,8 @@ class _SearchProductState extends State<SearchProduct> {
                       child: ListTile(
                         title: Text(
                           emptylistCompany[index].toString(),
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.white),
                         ),
                         subtitle: Text(
                           emptylistItem[index].toString(),

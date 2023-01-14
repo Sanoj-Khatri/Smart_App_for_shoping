@@ -1,7 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:smartapp_fyp/screens/category.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smartapp_fyp/splashScreen.dart';
 
 void main() async {
@@ -22,9 +20,9 @@ class MyApp extends StatelessWidget {
           // scaffoldBackgroundColor: Colors.orange,
           backgroundColor: Colors.amber,
           primarySwatch: Colors.deepPurple,
-          scaffoldBackgroundColor: Color.fromARGB(255, 232, 229, 229)),
+          scaffoldBackgroundColor: const Color.fromARGB(255, 232, 229, 229)),
       // home: const CategoryScreen(title: 'Smart Shopping App'),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
