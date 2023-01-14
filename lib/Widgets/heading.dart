@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class HeadingText extends StatelessWidget {
+class HeadingTet extends StatelessWidget {
   final String text;
 
-  const HeadingText({
+  const HeadingTet({
     required this.text,
     Key? key,
   }) : super(key: key);

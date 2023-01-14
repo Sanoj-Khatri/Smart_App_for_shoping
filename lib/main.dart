@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smartapp_fyp/screens/category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smartapp_fyp/splashScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +19,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // scaffoldBackgroundColor: Colors.orange,
-        backgroundColor: Colors.amber,
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: const CategoryScreen(title: 'Smart Shopping App'),
+          // scaffoldBackgroundColor: Colors.orange,
+          backgroundColor: Colors.amber,
+          primarySwatch: Colors.deepPurple,
+          scaffoldBackgroundColor: Color.fromARGB(255, 232, 229, 229)),
+      // home: const CategoryScreen(title: 'Smart Shopping App'),
+      home: SplashScreen(),
     );
   }
 }

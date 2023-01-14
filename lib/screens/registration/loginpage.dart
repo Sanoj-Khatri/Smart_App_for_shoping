@@ -1,11 +1,10 @@
-// ignore_for_file: unnecessary_const
-
 import 'package:flutter/material.dart';
-import 'package:smartapp_fyp/screens/registration/Widgets/button.dart';
+import 'package:flutter/services.dart';
+import 'package:smartapp_fyp/Utils/utils.dart';
 import 'package:smartapp_fyp/screens/registration/registration.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'Widgets/heading.dart';
-import 'Widgets/inputfield.dart';
+import '../../Widgets/button.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -16,41 +15,99 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
+  void login() async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        Utils().toastmessage("User not Found");
+      } else if (e.code == 'wrong-password') {
+        Utils().toastmessage("Wrong password");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Form(
-          key: _formKey,
+        child: WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Login'),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const HeadingText(
-                text: "Login",
-              ),
+              Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: emailController,
+                        decoration: const InputDecoration(
+                          hintText: "Email",
+                          helperText: "sanoj@gmail.com",
+                          prefixIcon: Icon(Icons.email),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Enter Email';
+                          }
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: passwordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          hintText: "Password",
+                          prefixIcon: Icon(Icons.lock),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Enter Password';
+                          }
+                        },
+                      ),
+                    ],
+                  )),
               const SizedBox(
-                height: 20,
+                height: 50,
               ),
-              InputPhoneNumber(
-                hintText: "Enter Phone Number",
-                prefixIcon: const Icon(Icons.phone),
-                fillColor: Colors.grey,
-              ),
-              const SizedBox(height: 20),
-              InputPasswordField(
-                hintText: "Enter Password",
-                icon: const Icon(Icons.lock),
-              ),
-              const SizedBox(height: 30),
-              const SizedBox(height: 10),
               RoundButton(
-                title: "Login",
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {}
-                },
-              ),
+                  title: "Login",
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      login();
+                    }
+                  }),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -60,7 +117,7 @@ class _LoginState extends State<Login> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: ((context) => SignUp())));
+                                builder: ((context) => const SignUp())));
                       },
                       child: const Text("SignIn"))
                 ],

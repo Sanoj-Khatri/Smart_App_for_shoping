@@ -1,8 +1,7 @@
-// ignore_for_file: unnecessary_const
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 
+//import 'package:quickalert/quickalert.dart';
 class RequestProduct extends StatefulWidget {
   const RequestProduct({Key? key}) : super(key: key);
 
@@ -11,11 +10,16 @@ class RequestProduct extends StatefulWidget {
 }
 
 class _RequestProductState extends State<RequestProduct> {
+  TextEditingController productName = TextEditingController();
+  TextEditingController companyName = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: const Text('Request for Product'),
+          centerTitle: true,
+        ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -23,8 +27,19 @@ class _RequestProductState extends State<RequestProduct> {
               const SizedBox(
                 height: 30,
               ),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: productName,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Product Name",
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                controller: companyName,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Company Name",
                 ),
@@ -32,19 +47,25 @@ class _RequestProductState extends State<RequestProduct> {
               const SizedBox(
                 height: 20,
               ),
-              const TextField(
-                decoration: const InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: "Product Name",
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
               ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                  label: const Text("Add"))
+                onPressed: () {
+                  Map<String, String> dataToSave = {
+                    'product_name': productName.text.toString(),
+                    'brand': companyName.text.toString(),
+                  };
+                  FirebaseFirestore.instance
+                      .collection('Product_Request')
+                      .add(dataToSave);
+                },
+                //Quick Alert to be set when Successfully data request sent
+                icon: const Icon(Icons.send),
+                label: const Text("send Request"),
+                //                 QuickAlert.show(
+                //  context: context,
+                //  type: QuickAlertType.success,
+                //  text: 'Transaction Completed Successfully!',
+                // );
+              )
             ],
           ),
         ),
