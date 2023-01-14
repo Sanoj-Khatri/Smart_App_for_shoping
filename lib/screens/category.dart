@@ -42,10 +42,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
               },
               icon: const Icon(EvaIcons.refresh),
               label: const Text('WishList')),
-          const CategoryButton(
-            icon: Icon(Icons.plus_one_outlined),
-            inputText: "Add Review",
-          ),
+
+          ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Login()));
+                //builder: (context) => UserInformation()));
+              },
+              icon: const Icon(Icons.plus_one_outlined),
+              label: const Text('Add Review')),
+          // const CategoryButton(
+          //   icon: Icon(Icons.plus_one_outlined),
+          //   inputText: "Add Review",
+          // ),
           ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smartapp_fyp/Utils/utils.dart';
+import 'package:smartapp_fyp/firestore%20database/user_provider.dart';
+import 'package:smartapp_fyp/models/user_model.dart';
 import 'package:smartapp_fyp/screens/registration/loginpage.dart';
 
 import '../../Widgets/button.dart';
@@ -19,6 +21,7 @@ class _SignUpState extends State<SignUp> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -31,27 +34,29 @@ class _SignUpState extends State<SignUp> {
     passwordController.dispose();
   }
 
-  void Registration() async {
+  void registerUser(
+      {required String email,
+      required String name,
+      required String pass}) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+      final authResult = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: pass,
       );
-      // setState(() {
-      //   loading = true;
-      // });
+      //Create a new User in firestore
+      UserModel _user = UserModel(
+        userId: authResult.user?.uid,
+        name: name,
+        email: email,
+      );
+      //Create new user
+      await UserProvider().createNewUser(_user);
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        // setState(() {
-        //   loading = false;
-        // });
-
         return Utils().toastmessage('The password provided is too weak');
       } else if (e.code == 'email-already-in-use') {
-        // setState(() {
-        //   loading = true;
-        // });
-
         return Utils().toastmessage("The account already exists ");
       }
     } catch (e) {
@@ -80,6 +85,22 @@ class _SignUpState extends State<SignUp> {
                 key: _formKey,
                 child: Column(
                   children: [
+                    TextFormField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        hintText: "Name",
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Enter your Name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       controller: emailController,
@@ -123,7 +144,10 @@ class _SignUpState extends State<SignUp> {
                 /// loading: loading,
                 onTap: () async {
                   if (_formKey.currentState!.validate()) {
-                    Registration();
+                    registerUser(
+                        email: emailController.text,
+                        name: nameController.text,
+                        pass: passwordController.text);
                   }
                 }),
           ],

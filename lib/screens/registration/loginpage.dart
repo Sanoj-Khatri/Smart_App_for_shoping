@@ -33,6 +33,8 @@ class _LoginState extends State<Login> {
         email: emailController.text,
         password: passwordController.text,
       );
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Utils().toastmessage("User not Found");
