@@ -59,8 +59,8 @@ class _FeebackState extends State<Feeback> {
                     items: martList
                         .map(
                           (e) => DropdownMenuItem(
-                            child: Text(e),
                             value: e,
+                            child: Text(e),
                           ),
                         )
                         .toList(),
@@ -83,8 +83,8 @@ class _FeebackState extends State<Feeback> {
                     items: companyList
                         .map(
                           (e) => DropdownMenuItem(
-                            child: Text(e),
                             value: e,
+                            child: Text(e),
                           ),
                         )
                         .toList(),
@@ -107,8 +107,8 @@ class _FeebackState extends State<Feeback> {
                     items: items
                         .map(
                           (e) => DropdownMenuItem(
-                            child: Text(e),
                             value: e,
+                            child: Text(e),
                           ),
                         )
                         .toList(),

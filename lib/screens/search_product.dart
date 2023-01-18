@@ -51,8 +51,8 @@ class _SearchProductState extends State<SearchProduct> {
                 items: companyList
                     .map(
                       (e) => DropdownMenuItem(
-                        child: Text(e),
                         value: e,
+                        child: Text(e),
                       ),
                     )
                     .toList(),
@@ -79,8 +79,8 @@ class _SearchProductState extends State<SearchProduct> {
                 items: items
                     .map(
                       (e) => DropdownMenuItem(
-                        child: Text(e),
                         value: e,
+                        child: Text(e),
                       ),
                     )
                     .toList(),
@@ -115,7 +115,7 @@ class _SearchProductState extends State<SearchProduct> {
                   itemCount: emptylistItem.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                         bottom: 20,
                       ),
                       width: MediaQuery.of(context).size.width / 1.1,

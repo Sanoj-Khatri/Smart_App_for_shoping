@@ -1,68 +1,89 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:smartapp_fyp/Utils/utils.dart';
+import 'package:smartapp_fyp/models/user_model.dart';
+import 'package:smartapp_fyp/screens/registration/loginpage.dart';
 
-addReview(context) {
+addReview(
+    {required BuildContext context,
+    required String productId,
+    required String collectionName,
+    required List reviews}) {
   TextEditingController reviewText = TextEditingController();
-  //final fireStore = FirebaseFirestore.instance.collection('ChasUp');
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
   showDialog(
       context: context,
-      builder: (BuildContext) {
+      builder: (BuildContext context) {
         return AlertDialog(
+          scrollable: true,
           title: const Text('Add Review'),
-          content: Column(
-            children: [
-              TextFormField(
-                controller: reviewText,
-                keyboardType: TextInputType.multiline,
-                minLines: 1, //Normal textInputField will be displayed
-                maxLines: 5,
-              ),
-              TextButton.icon(
-                  onPressed: () {
-                    //updateUser();
-                    // fireStore
-                    //     .doc('product_id')
-                    //     .set(({
-                    //       'review': reviewText.text.toString(),
-                    //     }))
-                    //     .then((value) {})
-                    //     .onError((error, stackTrace) {
-                    //   Utils().toastmessage(error.toString());
-                    // });
-                    // FirebaseFirestore.instance
-                    //     .collection('ChasUp')
-                    //     .doc('product_id')
-                    //     .update({
-                    //   'review': FieldValue.arrayUnion(['el1', 'el2'])
-                    // });
-                    // FirebaseFirestore.instance.collection('ChasUp').get().then(
-                    //       (value) => value.docs.forEach(
-                    //         (element) {
-                    //           var docRef = FirebaseFirestore.instance
-                    //               .collection('Chasup')
-                    //               .doc(element.id);
+          actionsAlignment: MainAxisAlignment.end,
+          actions: [
+            TextFormField(
+              decoration:
+                  const InputDecoration(hintText: "Please write your review"),
+              controller: reviewText,
+              keyboardType: TextInputType.multiline,
+              minLines: 1, //Normal textInputField will be displayed
+              maxLines: 5,
+            ),
+            TextButton.icon(
+              onPressed: () async {
+                if (await GetStorage().read("user_info") != null) {
+                  if (reviewText.text.isNotEmpty) {
+                    final userInfo = await GetStorage().read("user_info");
+                    try {
+                      print("review ${userInfo['name']}");
+                      reviews.add({
+                        "user_name": userInfo['name'],
+                        "review": reviewText.text
+                      });
 
-                    //           docRef.update({'bio': ''});
-                    //         },
-                    //       ),
-                    //     );
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Post Review'))
-            ],
-          ),
+                      firebaseFirestore
+                          .collection(collectionName)
+                          .doc(productId)
+                          .update({
+                        "reviews": reviews,
+                      });
+                      Navigator.pop(context);
+                    } catch (e) {
+                      print(e);
+                    }
+                  } else {
+                    Utils().toastmessage("Textfeild is empty ");
+                  }
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Login()));
+                  Utils().toastmessage("You have to login first");
+                }
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Post Review'),
+            )
+          ],
+          content: setupAlertDialoadContainer(context, reviews),
         );
       });
 }
 
-// CollectionReference users = FirebaseFirestore.instance.collection('ChasUp');
-
-// Future<void> updateUser() {
-//   return users
-//       .doc('1KCjJxOuPRa6glqXaYSC')
-//       .update({'ChasUp': 'review'})
-//       .then((value) => print("User Updated"))
-//       .catchError((error) => print("Failed to update user: $error"));
-// }
-
+Widget setupAlertDialoadContainer(BuildContext context, List review) {
+  return SizedBox(
+    height: MediaQuery.of(context).size.height,
+    width: MediaQuery.of(context).size.width,
+    child: review.isNotEmpty
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemCount: review.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(review[index]['review']),
+                subtitle: Text("Review By: ${review[index]['user_name']}"),
+              );
+            },
+          )
+        : const Text("No reviews available"),
+  );
+}

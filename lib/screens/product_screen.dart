@@ -1,29 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:smartapp_fyp/Utils/review.dart';
-import 'package:smartapp_fyp/screens/wish_list.dart';
+import 'package:smartapp_fyp/Utils/utils.dart';
+import 'package:smartapp_fyp/screens/registration/loginpage.dart';
 import '../Widgets/text_widget.dart';
 
-class User extends StatefulWidget {
+class ProductsScreen extends StatefulWidget {
+  const ProductsScreen({super.key});
+
   @override
-  _UserState createState() => _UserState();
+  // ignore: library_private_types_in_public_api
+  _ProductsScreenState createState() => _ProductsScreenState();
 }
 
-class _UserState extends State<User> {
+class _ProductsScreenState extends State<ProductsScreen> {
   TextEditingController searchController = TextEditingController();
 
-  TextEditingController _textFieldController = TextEditingController();
   String search = '';
-  final Stream<QuerySnapshot> _usersStream =
+  final Stream<QuerySnapshot> _productsStream =
       FirebaseFirestore.instance.collection('ChasUp').snapshots();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            "Products",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: _usersStream,
+          stream: _productsStream,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -58,7 +67,6 @@ class _UserState extends State<User> {
                         hintText: "Search product",
                       ),
                       onChanged: (String? value) {
-                        print(value);
                         setState(() {
                           search = value.toString();
                         });
@@ -78,101 +86,146 @@ class _UserState extends State<User> {
                               .toLowerCase()
                               .contains(search.toLowerCase()))
                       .map((QueryDocumentSnapshot<Object?> data) {
-                    final String title = data.get('product_name');
                     return Padding(
                         padding:
                             const EdgeInsets.only(top: 30.0, left: 8, right: 8),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height / 4.5,
-                          child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            elevation: 50,
-                            shadowColor: Colors.white,
-                            surfaceTintColor: Colors.red,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  radius: 30.0,
-                                  backgroundImage:
-                                      NetworkImage(data['product_pic']),
-                                  backgroundColor: Colors.transparent,
-                                ),
-                                title: Textdata(
-                                  text: data['product_name'],
-                                  fontsize: 21,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const heightSpacer(),
-                                    Textdata(
-                                      text: 'Brand: ${data['product_company']}',
-                                      fontsize: 16,
-                                    ),
-                                    const heightSpacer(),
-                                    Textdata(
-                                      text: data['product_weight'],
-                                      fontsize: 16,
-                                    ),
-                                    const heightSpacer(),
-                                    Textdata(
-                                      text: 'Mart: ${data['mart']}',
-                                      fontsize: 16,
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                    const heightSpacer(),
-                                    TextButton.icon(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.add_box_rounded),
-                                        label: const Text('Add Wishlist'))
-                                  ],
-                                ),
-                                trailing: Column(
-                                  children: [
-                                    Textdata(
-                                      text:
-                                          'Rs: ${data['product_price'].toString()}',
-                                      fontsize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    // heightSpacer(),
-                                    // const SizedBox(
-                                    //   height: 5,
-                                    // ),
-
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: (() {
-                                          //   SnackBar(content: Text('Checkbox'));
-                                          addReview(context);
-                                        }),
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2 /
-                                              2,
-                                          decoration: BoxDecoration(
-                                              color: Colors.purple,
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0)),
-                                          child: const Center(
-                                              child: Text(
-                                            'Add Review',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          )),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                isThreeLine: true,
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 8),
+                          elevation: 50,
+                          shadowColor: Colors.white,
+                          surfaceTintColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 30.0,
+                                backgroundImage:
+                                    NetworkImage(data['product_pic']),
+                                backgroundColor: Colors.transparent,
                               ),
+                              title: Textdata(
+                                text: data['product_name'],
+                                fontsize: 21,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const heightSpacer(),
+                                  Textdata(
+                                    text: 'Brand: ${data['product_company']}',
+                                    fontsize: 16,
+                                  ),
+                                  const heightSpacer(),
+                                  Textdata(
+                                    text: data['product_weight'],
+                                    fontsize: 16,
+                                  ),
+                                  const heightSpacer(),
+                                  Textdata(
+                                    text: 'Mart: ${data['mart']}',
+                                    fontsize: 16,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  const heightSpacer(),
+                                  TextButton.icon(
+                                      onPressed: () async {
+                                        if (GetStorage().read("user_info") !=
+                                            null) {
+                                          List<dynamic> wishListIds =
+                                              await GetStorage().read(
+                                                  'user_info')['wishListIds'];
+
+                                          await FirebaseFirestore.instance
+                                              .collection("users")
+                                              .doc(GetStorage()
+                                                  .read("user_info")["user_id"])
+                                              .get()
+                                              .then((doc) async {
+                                            if (!doc
+                                                .data()!["wishListIds"]
+                                                ?.contains(
+                                                    data.id.toString())) {
+                                              wishListIds
+                                                  .add(data.id.toString());
+                                              FirebaseFirestore.instance
+                                                  .collection("users")
+                                                  .doc(GetStorage().read(
+                                                      "user_info")["user_id"])
+                                                  .update({
+                                                "wishListIds": wishListIds
+                                              });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      dismissDirection:
+                                                          DismissDirection.down,
+                                                      duration:
+                                                          Duration(seconds: 1),
+                                                      content: Text(
+                                                          "Added Successfully")));
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      dismissDirection:
+                                                          DismissDirection.down,
+                                                      duration:
+                                                          Duration(seconds: 1),
+                                                      content: Text(
+                                                          "Already Added in the list")));
+                                            }
+                                          });
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Login()));
+                                          Utils().toastmessage(
+                                              "You have to login first");
+                                        }
+                                      },
+                                      icon: const Icon(Icons.add_box_rounded),
+                                      label: const Text('Add Wishlist'))
+                                ],
+                              ),
+                              trailing: Column(
+                                children: [
+                                  Textdata(
+                                    text:
+                                        'Rs: ${data['product_price'].toString()}',
+                                    fontsize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  GestureDetector(
+                                    onTap: (() async {
+                                      await addReview(
+                                        collectionName: 'ChasUp',
+                                        context: context,
+                                        productId: data.id,
+                                        reviews: data['reviews'] ?? [],
+                                      );
+                                    }),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          2 /
+                                          2,
+                                      decoration: BoxDecoration(
+                                          color: Colors.purple,
+                                          borderRadius:
+                                              BorderRadius.circular(20.0)),
+                                      child: const Center(
+                                          child: Text(
+                                        'Add Review',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              isThreeLine: true,
                             ),
                           ),
                         ));
@@ -205,15 +258,15 @@ class heightSpacer extends StatelessWidget {
 // import 'package:flutter/material.dart';
 // import '../Widgets/text_widget.dart';
 
-// class UserInformation extends StatefulWidget {
+// class ProductsScreenInformation extends StatefulWidget {
 //   @override
-//   _UserInformationState createState() => _UserInformationState();
+//   _ProductsScreenInformationState createState() => _ProductsScreenInformationState();
 // }
 
-// class _UserInformationState extends State<UserInformation> {
+// class _ProductsScreenInformationState extends State<ProductsScreenInformation> {
 //   TextEditingController searchController = TextEditingController();
 //   String search = '';
-//   final Stream<QuerySnapshot> _usersStream =
+//   final Stream<QuerySnapshot> _ProductsScreensStream =
 //       FirebaseFirestore.instance.collection('ChasUp').snapshots();
 
 //   @override
@@ -221,7 +274,7 @@ class heightSpacer extends StatelessWidget {
 //     return Scaffold(
 //         appBar: AppBar(),
 //         body: StreamBuilder<QuerySnapshot>(
-//           stream: _usersStream,
+//           stream: _ProductsScreensStream,
 //           builder:
 //               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 //             if (snapshot.hasError) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smartapp_fyp/firestore%20database/fetech_data_firestore.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);

@@ -49,6 +49,7 @@ class _RequestProductState extends State<RequestProduct> {
               ElevatedButton.icon(
                 onPressed: () {
                   Map<String, String> dataToSave = {
+                    'mart': "",
                     'product_name': productName.text.toString(),
                     'brand': companyName.text.toString(),
                   };
@@ -59,11 +60,6 @@ class _RequestProductState extends State<RequestProduct> {
                 //Quick Alert to be set when Successfully data request sent
                 icon: const Icon(Icons.send),
                 label: const Text("send Request"),
-                //                 QuickAlert.show(
-                //  context: context,
-                //  type: QuickAlertType.success,
-                //  text: 'Transaction Completed Successfully!',
-                // );
               )
             ],
           ),

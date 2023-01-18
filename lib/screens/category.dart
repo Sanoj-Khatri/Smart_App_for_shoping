@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:smartapp_fyp/screens/registration/loginpage.dart';
 import 'package:smartapp_fyp/screens/request_for_product.dart';
 import 'package:smartapp_fyp/screens/wish_list.dart';
 
-import '../firestore database/fetech_data_firestore.dart';
+import 'product_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({
@@ -42,23 +43,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
               },
               icon: const Icon(EvaIcons.refresh),
               label: const Text('WishList')),
-
           ElevatedButton.icon(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Login()));
-                //builder: (context) => UserInformation()));
+                if (GetStorage().read("user_info") != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProductsScreen()));
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Login()));
+                }
               },
               icon: const Icon(Icons.plus_one_outlined),
               label: const Text('Add Review')),
-          // const CategoryButton(
-          //   icon: Icon(Icons.plus_one_outlined),
-          //   inputText: "Add Review",
-          // ),
           ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => User()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProductsScreen()));
               },
               icon: const Icon(Icons.search),
               label: const Text('Search Product')),
