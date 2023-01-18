@@ -15,11 +15,10 @@ class _WishListState extends State<WishList> {
   bool isLoading = true;
   List<dynamic> wishListIds = [];
   List<DocumentSnapshot> products = [];
-  String userId = "";
   @override
   void initState() {
     if (GetStorage().read("user_info") != null) {
-      Future.delayed(const Duration(seconds: 5), () => getWishListIDS());
+      Future.delayed(const Duration(seconds: 0), () => getWishListIDS());
     }
 
     super.initState();
@@ -66,9 +65,7 @@ class _WishListState extends State<WishList> {
         centerTitle: true,
       ),
       body: wishListIds.isEmpty
-          ? EmptyView(
-              isLoading: isLoading,
-            )
+          ? const EmptyView()
           : ListView.builder(
               key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
               itemCount: products.length,
@@ -137,37 +134,6 @@ class _WishListState extends State<WishList> {
                                             setState(() {
                                               products.removeAt(index);
                                             });
-                                            //   DocumentSnapshot doc =
-                                            //       await FirebaseFirestore.instance
-                                            //           .collection("users")
-                                            //           .doc(GetStorage().read(
-                                            //               "user_info")['user_id'])
-                                            //           .get();
-                                            //   final userInfo = {
-                                            //     "user_id": GetStorage()
-                                            //         .read("user_info")['user_id'],
-                                            //     "name": doc['name'],
-                                            //     "email": doc['email'],
-                                            //     "wishListIds": doc['wishListIds'],
-                                            //   };
-                                            //   await GetStorage()
-                                            //       .write("user_info", userInfo);
-                                            // });
-                                            // setState(() async {
-                                            //   wishListIds = GetStorage().read(
-                                            //       "user_info")['wishListIds'];
-                                            //   products.clear();
-                                            //   for (var id in wishListIds) {
-                                            //     DocumentSnapshot doc =
-                                            //         await FirebaseFirestore
-                                            //             .instance
-                                            //             .collection("ChasUp")
-                                            //             .doc(id.toString())
-                                            //             .get();
-                                            //     setState(() {
-                                            //       products.add(doc);
-                                            //     });
-                                            //}
                                           });
                                         } catch (e) {
                                           print(e);
@@ -196,32 +162,27 @@ class _WishListState extends State<WishList> {
 }
 
 class EmptyView extends StatelessWidget {
-  final bool isLoading;
   const EmptyView({
     Key? key,
-    required this.isLoading,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                const Icon(
-                  Icons.error_outline,
-                  size: 100,
-                ),
-                const Text(
-                  "No Product to show",
-                  style: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.w200),
-                ),
-              ],
-            ),
-          );
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          const Icon(
+            Icons.error_outline,
+            size: 100,
+          ),
+          const Text(
+            "No Product to show",
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w200),
+          ),
+        ],
+      ),
+    );
   }
 }
 
