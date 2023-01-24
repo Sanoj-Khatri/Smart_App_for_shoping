@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:smartapp_fyp/Utils/utils.dart';
 import 'package:smartapp_fyp/screens/registration/loginpage.dart';
 import 'package:smartapp_fyp/screens/request_for_product.dart';
 import 'package:smartapp_fyp/screens/wish_list.dart';
@@ -26,6 +29,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
           "Select Category",
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () async {
+                if (GetStorage().read("user_info") != null) {
+                  await FirebaseAuth.instance.signOut();
+                  await GetStorage().erase();
+                  Utils().toastmessage("Logout Successfully");
+                }
+              },
+              icon: Icon(Icons.logout_outlined))
+        ],
       ),
       body: Center(
           child: Column(

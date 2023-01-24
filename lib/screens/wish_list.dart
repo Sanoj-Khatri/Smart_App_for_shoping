@@ -71,8 +71,8 @@ class _WishListState extends State<WishList> {
               itemCount: products.length,
               itemBuilder: (context, index) {
                 return Padding(
-                    padding:
-                        const EdgeInsets.only(top: 30.0, left: 8, right: 8),
+                    padding: const EdgeInsets.only(
+                        top: 30.0, left: 8, right: 8, bottom: 30),
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height / 4.5,
                       child: Card(
